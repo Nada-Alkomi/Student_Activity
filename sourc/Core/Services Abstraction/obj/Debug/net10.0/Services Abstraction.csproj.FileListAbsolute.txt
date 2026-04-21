@@ -1,0 +1,54 @@
+C:\Users\duck1\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.deps.json
+C:\Users\duck1\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.dll
+C:\Users\duck1\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.pdb
+C:\Users\duck1\sourc\Core\Services Abstraction\bin\Debug\net10.0\Domain.dll
+C:\Users\duck1\sourc\Core\Services Abstraction\bin\Debug\net10.0\Shared.dll
+C:\Users\duck1\sourc\Core\Services Abstraction\bin\Debug\net10.0\Shared.pdb
+C:\Users\duck1\sourc\Core\Services Abstraction\bin\Debug\net10.0\Domain.pdb
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.csproj.AssemblyReference.cache
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.AssemblyInfoInputs.cache
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.AssemblyInfo.cs
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.csproj.CoreCompileInputs.cache
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.sourcelink.json
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services.4B0F6490.Up2Date
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.dll
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\refint\Services Abstraction.dll
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.pdb
+C:\Users\duck1\sourc\Core\Services Abstraction\obj\Debug\net10.0\ref\Services Abstraction.dll
+E:\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.deps.json
+E:\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.dll
+E:\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.pdb
+E:\sourc\Core\Services Abstraction\bin\Debug\net10.0\Domain.dll
+E:\sourc\Core\Services Abstraction\bin\Debug\net10.0\Shared.dll
+E:\sourc\Core\Services Abstraction\bin\Debug\net10.0\Shared.pdb
+E:\sourc\Core\Services Abstraction\bin\Debug\net10.0\Domain.pdb
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.csproj.AssemblyReference.cache
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.GeneratedMSBuildEditorConfig.editorconfig
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.AssemblyInfoInputs.cache
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.AssemblyInfo.cs
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.csproj.CoreCompileInputs.cache
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.sourcelink.json
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services.4B0F6490.Up2Date
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.dll
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\refint\Services Abstraction.dll
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.pdb
+E:\sourc\Core\Services Abstraction\obj\Debug\net10.0\ref\Services Abstraction.dll
+E:\Must\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.deps.json
+E:\Must\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.dll
+E:\Must\sourc\Core\Services Abstraction\bin\Debug\net10.0\Services Abstraction.pdb
+E:\Must\sourc\Core\Services Abstraction\bin\Debug\net10.0\Domain.dll
+E:\Must\sourc\Core\Services Abstraction\bin\Debug\net10.0\Shared.dll
+E:\Must\sourc\Core\Services Abstraction\bin\Debug\net10.0\Shared.pdb
+E:\Must\sourc\Core\Services Abstraction\bin\Debug\net10.0\Domain.pdb
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.csproj.AssemblyReference.cache
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.GeneratedMSBuildEditorConfig.editorconfig
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.AssemblyInfoInputs.cache
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.AssemblyInfo.cs
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.csproj.CoreCompileInputs.cache
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.sourcelink.json
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services.4B0F6490.Up2Date
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.dll
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\refint\Services Abstraction.dll
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\Services Abstraction.pdb
+E:\Must\sourc\Core\Services Abstraction\obj\Debug\net10.0\ref\Services Abstraction.dll

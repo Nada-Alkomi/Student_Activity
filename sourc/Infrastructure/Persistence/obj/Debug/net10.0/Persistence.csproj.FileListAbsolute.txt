@@ -1,0 +1,72 @@
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.deps.json
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.runtimeconfig.json
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.dll
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.pdb
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Domain.dll
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services Abstraction.dll
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services.dll
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Shared.dll
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services.pdb
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Domain.pdb
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services Abstraction.pdb
+C:\Users\duck1\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Shared.pdb
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.csproj.AssemblyReference.cache
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.AssemblyInfoInputs.cache
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.AssemblyInfo.cs
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.csproj.CoreCompileInputs.cache
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.sourcelink.json
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persiste.61C28332.Up2Date
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.dll
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\refint\Persistence.dll
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.pdb
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.genruntimeconfig.cache
+C:\Users\duck1\sourc\Infrastructure\Persistence\obj\Debug\net10.0\ref\Persistence.dll
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.deps.json
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.runtimeconfig.json
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.dll
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.pdb
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Domain.dll
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services Abstraction.dll
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services.dll
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Shared.dll
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services.pdb
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Domain.pdb
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services Abstraction.pdb
+E:\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Shared.pdb
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.csproj.AssemblyReference.cache
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.GeneratedMSBuildEditorConfig.editorconfig
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.AssemblyInfoInputs.cache
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.AssemblyInfo.cs
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.csproj.CoreCompileInputs.cache
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.sourcelink.json
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persiste.61C28332.Up2Date
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.dll
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\refint\Persistence.dll
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.pdb
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.genruntimeconfig.cache
+E:\sourc\Infrastructure\Persistence\obj\Debug\net10.0\ref\Persistence.dll
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.deps.json
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.runtimeconfig.json
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.dll
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Persistence.pdb
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Domain.dll
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services Abstraction.dll
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services.dll
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Shared.dll
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services.pdb
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Domain.pdb
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Services Abstraction.pdb
+E:\Must\sourc\Infrastructure\Persistence\bin\Debug\net10.0\Shared.pdb
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.csproj.AssemblyReference.cache
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.GeneratedMSBuildEditorConfig.editorconfig
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.AssemblyInfoInputs.cache
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.AssemblyInfo.cs
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.csproj.CoreCompileInputs.cache
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.sourcelink.json
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persiste.61C28332.Up2Date
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.dll
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\refint\Persistence.dll
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.pdb
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\Persistence.genruntimeconfig.cache
+E:\Must\sourc\Infrastructure\Persistence\obj\Debug\net10.0\ref\Persistence.dll
