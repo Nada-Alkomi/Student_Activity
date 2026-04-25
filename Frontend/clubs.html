@@ -708,100 +708,7 @@
     <section class="clubs-section">
         <h1>Student Clubs at MUST</h1>
 
-        <div class="clubs-grid" id="clubsContainer">
-
-            <div class="club-card">
-                <img src="./inf proj/img/logo-lockup-gdg-horizontal_720.png" alt="GDG Club" class="club-img">
-                <h3>GDG</h3>
-                <p>GDG is the Google Developer Student Club at MUST. Members learn Google technologies, build web and
-                    mobile applications, and collaborate on real-world projects. The club hosts workshops, hackathons,
-                    and mentoring sessions to develop technical skills and network with tech peers.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                    <a href="./registerClub.html?type=club&title=GDG">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/images.jpeg" alt="IEEE Club" class="club-img">
-                <h3>IEEE</h3>
-                <p>IEEE is the global engineering and technology club at MUST. It supports members through seminars,
-                    robotics projects, and research events. The club encourages innovation in electronics,
-                    communications, and AI, building professional networks and technical skills.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                    <a href="./registerClub.html?type=club&title=IEEE">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/maxresdefault.jpg" alt="CPC Club" class="club-img">
-                <h3>CPC</h3>
-                <p>CPC is the Competitive Programming Club at MUST. It brings together students who love coding,
-                    problem-solving, and software development. The club organizes programming contests, collaborative
-                    projects, and training sessions to improve coding fluency.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                    <a href="./registerClub.html?type=club&title=CPC">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/1682625466215.jpeg" alt="Cyber MUST Club" class="club-img">
-                <h3>Cyber MUST</h3>
-                <p>Cyber MUST is the student cybersecurity club at MUST. It focuses on ethical hacking, digital defense,
-                    and cybersecurity research. Members train in CTF challenges, threat analysis, and security labs to
-                    build strong protection skills for cyber careers.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                    <a href="./registerClub.html?type=club&title=Cyber%20MUST">Registration</a>
-                </button>
-            </div>
-
-            
-            <div class="club-card">
-                <img src="./inf proj/img/images (1).jpeg" alt="Huawei AI Club" class="club-img">
-                <h3>Huawei AI Club</h3>
-                <p>The MUST AI Club is a certified training center qualifying students in Artificial Intelligence and
-                    Deep Learning using Huawei tools like ModelArts. Activities include HCIA-AI prep camps, practical
-                    projects, and the Huawei ICT Competition.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                    <a href="./registerClub.html?type=club&title=Huawei%20AI%20Club">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/images.png" alt="Huawei Academy - MUST" class="club-img">
-                <h3>Huawei Academy</h3>
-                <p>Huawei Academy at MUST provides certified training connecting university studies with the job market
-                    in Cloud, AI, Security, and Datacom. Activities include certified courses, summer internships, job
-                    opportunities, and tech seminars with global experts.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                    <a href="./registerClub.html?type=club&title=Huawei%20Academy">Registration</a>
-                </button>
-            </div>
-
-        </div>
+        <div class="clubs-grid" id="clubsContainer"></div>
     </section>
 
     <footer>
@@ -853,34 +760,55 @@
 
     <script src="js/api.js"></script>
     <script>
-        // Load clubs from API into clubs.html
+        const CLUBS_BASE_URL =
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:5184'
+                : 'https://must.runasp.net';
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
         function loadClubsPage() {
             var grid = document.getElementById('clubsContainer');
             if (!grid) return;
+            grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Loading clubs...</p>';
+
             MustAPI.getClubs()
                 .then(function(data) {
-                    if (!data || !Array.isArray(data) || data.length === 0) return;
+                    if (!data || !Array.isArray(data) || data.length === 0) {
+                        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">No clubs available yet.</p>';
+                        return;
+                    }
+
                     grid.innerHTML = '';
                     data.forEach(function(club) {
                         var imgSrc = club.imageUrl || club.image || '';
-                        if (imgSrc && imgSrc.startsWith('/')) imgSrc = 'https://must.runasp.net' + imgSrc;
+                        if (imgSrc && imgSrc.startsWith('/')) imgSrc = CLUBS_BASE_URL + imgSrc;
                         if (!imgSrc) imgSrc = 'img/event2.png';
                         var desc = (club.description || '').slice(0, 200);
                         var registrationUrl = './registerClub.html?type=club&id=' + encodeURIComponent(club.id) + '&title=' + encodeURIComponent(club.name || '');
                         grid.innerHTML += '<div class="club-card">' +
-                            '<img src="' + imgSrc + '" alt="' + (club.name || '') + '" class="club-img" onerror="this.src=\'img/event2.png\'">' +
-                            '<h3>' + (club.name || '') + '</h3>' +
-                            '<p>' + desc + '</p>' +
+                            '<img src="' + escapeHtml(imgSrc) + '" alt="' + escapeHtml(club.name || '') + '" class="club-img" onerror="this.src=\'img/event2.png\'">' +
+                            '<h3>' + escapeHtml(club.name || '') + '</h3>' +
+                            '<p>' + escapeHtml(desc) + '</p>' +
                             '<button class="join-btn"><a href="' + registrationUrl + '">Registration</a></button>' +
                             '</div>';
                     });
                     console.log('clubs.html: loaded', data.length, 'clubs from API');
                 })
-                .catch(function(err) { console.error('clubs.html API error:', err); });
+                .catch(function(err) {
+                    console.error('clubs.html API error:', err);
+                    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Failed to load clubs.</p>';
+                });
         }
         document.addEventListener('DOMContentLoaded', function() {
             loadClubsPage();
-            setInterval(loadClubsPage, 5000);
         });
     </script>
     <script src="js/script.js"></script>

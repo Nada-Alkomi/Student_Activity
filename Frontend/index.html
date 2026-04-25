@@ -11,8 +11,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
-   
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
@@ -46,6 +44,19 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
             line-height: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        #activity,
+        #events,
+        #news,
+        #competitions,
+        #clubs,
+        #contact {
+            scroll-margin-top: 150px;
         }
 
 
@@ -119,6 +130,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            white-space: nowrap;
         }
 
         .dropdown>a:hover,
@@ -178,6 +190,7 @@
             align-items: center;
             gap: 1.5rem;
             font-size: 1.2rem;
+            margin-left: 2rem;
         }
 
         .nav-icons i,
@@ -2143,15 +2156,6 @@
 
     <div class="content-container">
 
-     
-            <div class="carousel-slide active" style="background-image: url('img/slider1.jpeg');"></div>
-            <div class="carousel-slide" style="background-image: url('img/slider2.jpeg');"></div>
-            <div class="carousel-slide" style="background-image: url('img/slider3.jpeg');"></div>
-            <div class="carousel-slide" style="background-image: url('img/slider4.jpeg');"></div>
-            <div class="carousel-slide" style="background-image: url('img/slider5.jpeg');"></div>
-            <div class="carousel-slide" style="background-image: url('img/slider6.jpeg');"></div>
-            <div class="carousel-slide" style="background-image: url('img/slider7.jpeg');"></div>
-
             <div class="carousel-controls">
                 <button class="control-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="control-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
@@ -2162,7 +2166,7 @@
                         <a href="./index.html" title="Home"> Home </a>
                     </li>
                     <li class="menu-item">
-                        <a href="./index.html#activity"> Activities</a>
+                        <a href="#activity"> Activities</a>
                         <div class="mega-menu">
                             <div class="mega-column" id="activitiesMenuList">
                               
@@ -2175,31 +2179,31 @@
                         </div>
                     </li>
                  <li class="menu-item" >
-                        <a href="./allEvents.html">Events</a>
+                        <a href="#events">Events</a>
                       
                     </li>
                        <li class="menu-item">
-                        <a href="./allNews.html">News</a>
+                        <a href="#news">News</a>
                       
                     </li>
                     
                     <li class="menu-item">
-                        <a href="./index.html#competitions">competitions</a>
+                        <a href="#competitions">competitions</a>
                 
                           
                         
                         
                     </li>
                     <li class="menu-item">
-                        <a href="./clubsthree.html">Clubs</a>
+                        <a href="#clubs">Clubs</a>
                         <div class="mega-menu">
                             <div class="mega-column" id="clubsMenuList">
-                                <a href="./clubs.html">All Clubs</a>
+                                <a href="#clubs">All Clubs</a>
                             </div>
                         </div>
                     </li> 
                     <li class="menu-item " style="width: 157px;"> 
-                        <a href="./index.html#contact">Contact Us</a>
+                        <a href="#contact">Contact Us</a>
                      
                     </li>
                 </ul>
@@ -2219,89 +2223,54 @@
     <!-- Dynamic activity cards injected by script.js -->
   </div>
 </div>
-<div id="events" style="margin-bottom:70px;margin-top: 7rem;">
+<div id="events" style="margin-bottom:70px;margin-top:7rem;">
 
     <h2 class="mb-3">Events</h2>
+
     <div class="events-container" id="eventsContainer">
-       
-        <!-- الكروت هتتولد بالـ JS -->
-    </div>
-    <!-- Modal -->
-<div id="eventModal" class="modal">
 
-  <div class="modal-content">
-
-    <span class="close" onclick="closeModal()">&times;</span>
-
-    <img id="modalImg" class="modal-img">
-
-    <h2 id="modalTitle"></h2>
-
-    <div class="modal-meta">
-      <span id="modalTime"></span>
-      <span id="modalLocation"></span>
+        <!-- JS renders here -->
     </div>
 
-    <p id="modalDesc"></p>
+    <!-- ================= MODAL ================= -->
+    <div id="eventModal" class="modal">
+
+        <div class="modal-content">
+
+            <span class="close" onclick="closeModal()">&times;</span>
+
+            <!-- ✅ حماية الصورة من الاختفاء + cache -->
+            <img id="modalImg" class="modal-img"
+                 onerror="this.onerror=null;this.src='img/event2.png'">
+
+            <h2 id="modalTitle"></h2>
+
+            <div class="modal-meta">
+                <span id="modalTime"></span>
+                <span id="modalLocation"></span>
+            </div>
+
+            <p id="modalDesc"></p>
+
+        </div>
 
     </div>
 
-</div>
     <a href="allEvents.html" class="see-all-btn">See All Events</a>
+
 </div>
+
 
 <div id="news" style="margin-top: 7rem;">
     
-    <h2 >News</h2>
-     <section class="news-section">
-      <div class="news-container">
-    
-        <div class="card events" onclick="openNews(0)">
-          <img src="img/ندوة.jpg">
-    
-          <div class="card-content">
-            <div class="meta">
-              <span><i class="fa-regular fa-user"></i> By Code95 Admin</span>
-              <span><i class="fa-regular fa-calendar"></i> January 23, 2024</span>
-            </div>
-    
-            <h3>
-              Spreading awareness against FGM and supporting women empowerment.
-            </h3>
-          </div>
-        </div>
-    
-        <div class="card collaboration" onclick="openNews(1)">
-          <img src="img/new2.jpg">
-    
-          <div class="card-content">
-            <div class="meta">
-              <span><i class="fa-regular fa-user"></i> By Code95 Admin</span>
-              <span><i class="fa-regular fa-calendar"></i> January 23, 2023</span>
-            </div>
-    
-            <h3>
-              The First Women's Football Team at Misr University.
-            </h3>
-          </div>
-        </div>
-    
-        <div class="card students" onclick="openNews(2)">
-          <img src="img/news.jpg">
-    
-          <div class="card-content">
-            <div class="meta">
-              <span><i class="fa-regular fa-user"></i> By Habiba</span>
-              <span><i class="fa-regular fa-calendar"></i> March 23, 2025</span>
-            </div>
-    
-            <h3>
-              Ramadan Football Tournament
-            </h3>
-          </div>
-        </div>
-    
-      </div>
+    <h2>News</h2>
+
+<section class="news-section">
+  <div class="news-container" id="newsContainer">
+    <!-- cards will be injected by JS -->
+  </div>
+</section>
+
     
        <a href="allNews.html" class="see-all-btn">See All News</a>
     </section>
@@ -2309,7 +2278,7 @@
 <!-- News Modal -->
 <div id="newsModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeNews()">&times;</span>
+    <span class="close" onclick="closeNewsModal()">&times;</span>
 
     <img id="newsImg" class="modal-img">
 
@@ -2335,83 +2304,7 @@
 
     <button class="slider-btn prev">&#10094;</button>
 
-    <div class="slider-track">
-
-        <!-- 1️⃣ Quran Competition -->
-        <div class="slide">
-            <div class="competition-card quran-card">
-                <span class="comp-badge special">Ramadan</span>
-
-                <img src="./img/مسابقه.jpg" class="comp-img">
-
-                <h3>Holy Quran Memorization Competition</h3>
-
-                <p class="comp-desc">
-                    Misr University of Science and Technology announces its annual Holy Quran memorization competition
-                    during the month of Ramadan for students, staff, and their children.
-                </p>
-
-                <div class="comp-date">📅 Registration until: 27 January 2026</div>
-                <div class="comp-date">🏁 Starts: 2 February 2026</div>
-
-                   <button class="join-btn">
-                    <a href="./registerClub.html?type=competition&title=Holy%20Quran%20Memorization%20Competition">Registration</a>
-                </button>
-            </div>
-        </div>
-
-        <!-- 2️⃣ CPC -->
-        <div class="slide">
-            <div class="competition-card cpc-card">
-                <span class="comp-badge">New</span>
-
-                <img src="./img/cpc.jpeg" class="comp-img">
-
-                <h3>MUST CPC 2026</h3>
-
-                <p class="comp-desc">
-                    Challenge your programming skills and join MUST CPC 2026!
-                </p>
-
-                <div class="comp-date">⏳ Deadline: 31 / 3 / 2026</div>
-    <button class="join-btn">
-                    <a href="./registerClub.html?type=competition&title=MUST%20CPC%202026">Registration</a>
-                </button>
-            </div>
-        </div>
-
-        <!-- 3️⃣ MUST Creators Festival -->
-      
-<div class="slide">
-    <div class="competition-card must-card">
-
-        <div class="img-wrapper">
-            <img src="./img/comp3.jpeg" class="comp-img">
-            <span class="badge">🔥 Season 2</span>
-        </div>
-
-        <h3 class="title">MUST Creators Festival ✨</h3>
-
-        <p class="comp-desc">
-            Misr University of Science and Technology announces the opening of registration 
-            for the second season of the <strong>MUST Creators Festival</strong> across a wide range of creative fields.
-        </p>
-
-        <div class="categories">
-            <span>🎬 Film & Writing</span>
-            <span>🎤 Music & Acting</span>
-            <span>💡 Scientific Innovations</span>
-            <span>🎨 Visual Arts</span>
-            <span>🕌 Religious Chanting & Media</span>
-        </div>
-
-          <button class="join-btn">
-                    <a href="./registerClub.html?type=competition&title=MUST%20Creators%20Festival">Registration</a>
-                </button>
-
-    </div>
-</div>
-    </div>
+    <div class="slider-track"></div>
 
     <button class="slider-btn next">&#10095;</button>
 
@@ -2419,107 +2312,14 @@
 
  </section>  
    
-   <section class="clubs-section" id="clubs" style="margin-top: 7rem;">
-        <h2>Clubs</h1>
+<section class="clubs-section" id="clubs" style="margin-top: 7rem;">
+    <h2>Clubs</h2>
 
-        <div class="clubs-grid">
-
-            <div class="club-card">
-                <img src="./inf proj/img/logo-lockup-gdg-horizontal_720.png" alt="GDG Club" class="club-img">
-                <h3>GDG</h3>
-                <p>GDG is the Google Developer Student Club at MUST. Members learn Google technologies, build web and
-                    mobile applications, and collaborate on real-world projects. The club hosts workshops, hackathons,
-                    and mentoring sessions to develop technical skills and network with tech peers.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                    <a href="./registerClub.html?type=club&title=GDG">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/images.jpeg" alt="IEEE Club" class="club-img">
-                <h3>IEEE</h3>
-                <p>IEEE is the global engineering and technology club at MUST. It supports members through seminars,
-                    robotics projects, and research events. The club encourages innovation in electronics,
-                    communications, and AI, building professional networks and technical skills.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                   <a href="./registerClub.html?type=club&title=IEEE">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/maxresdefault.jpg" alt="CPC Club" class="club-img">
-                <h3>CPC</h3>
-                <p>CPC is the Competitive Programming Club at MUST. It brings together students who love coding,
-                    problem-solving, and software development. The club organizes programming contests, collaborative
-                    projects, and training sessions to improve coding fluency.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                  <a href="./registerClub.html?type=club&title=CPC">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/1682625466215.jpeg" alt="Cyber MUST Club" class="club-img">
-                <h3>Cyber MUST</h3>
-                <p>Cyber MUST is the student cybersecurity club at MUST. It focuses on ethical hacking, digital defense,
-                    and cybersecurity research. Members train in CTF challenges, threat analysis, and security labs to
-                    build strong protection skills for cyber careers.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                     <a href="./registerClub.html?type=club&title=Cyber%20MUST">Registration</a>
-                </button>
-            </div>
-
-            
-            <div class="club-card">
-                <img src="./inf proj/img/images (1).jpeg" alt="Huawei AI Club" class="club-img">
-                <h3>Huawei AI Club</h3>
-                <p>The MUST AI Club is a certified training center qualifying students in Artificial Intelligence and
-                    Deep Learning using Huawei tools like ModelArts. Activities include HCIA-AI prep camps, practical
-                    projects, and the Huawei ICT Competition.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                  <a href="./registerClub.html?type=club&title=Huawei%20AI%20Club">Registration</a>
-                </button>
-            </div>
-
-            <div class="club-card">
-                <img src="./inf proj/img/images.png" alt="Huawei Academy - MUST" class="club-img">
-                <h3>Huawei Academy</h3>
-                <p>Huawei Academy at MUST provides certified training connecting university studies with the job market
-                    in Cloud, AI, Security, and Datacom. Activities include certified courses, summer internships, job
-                    opportunities, and tech seminars with global experts.</p>
-                <!-- <div class="phone">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01012345678</span>
-                </div> -->
-                <button class="join-btn">
-                <a href="./registerClub.html?type=club&title=Huawei%20Academy">Registration</a>
-                </button>
-            </div>
-
-        </div>
-    </section>
-
-
-   <section class="contact-section" id="contact">
+    <div class="clubs-grid" id="clubsContainer">
+        <!-- API DATA HERE -->
+    </div>
+</section>
+<section class="contact-section" id="contact">
     <div class="layertwo"></div>
     <div class="contact-container">
 
@@ -2553,8 +2353,6 @@
 
     </div>
 </section>
-
-
 
 
 <footer>
@@ -2609,381 +2407,67 @@
 
    
     <script>
-        var currentSlide = 0;
+var currentSlide = 0;
 
-        function getSlides() {
-            return document.querySelectorAll('.carousel-slide');
-        }
+function getSlides() {
+    return document.querySelectorAll('.carousel-slide');
+}
 
-        function showSlide(index) {
-            const slides = getSlides();
-            if (!slides.length) return;
-            if (index >= slides.length) currentSlide = 0;
-            if (index < 0) currentSlide = slides.length - 1;
+function showSlide(index) {
+    const slides = getSlides();
+    if (!slides.length) return;
 
-            slides.forEach(slide => slide.classList.remove('active'));
-            if (slides[currentSlide]) {
-                slides[currentSlide].classList.add('active');
-            }
-        }
+    currentSlide = (index + slides.length) % slides.length;
 
-        function nextSlide() {
-            const slides = getSlides();
-            if (slides.length > 0) {
-                currentSlide = (currentSlide + 1) % slides.length;
-                showSlide(currentSlide);
-            }
-        }
+    slides.forEach(slide => slide.classList.remove('active'));
 
-        function prevSlide() {
-            const slides = getSlides();
-            if (slides.length > 0) {
-                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                showSlide(currentSlide);
-            }
-        }
+    slides[currentSlide].classList.add('active');
+}
 
-        let autoSlideInterval = setInterval(nextSlide, 12000);
-        function joinCompetition(name) {
+function nextSlide() {
+    showSlide(currentSlide + 1);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.slider-menu a[href^="#"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
+            if (!target) return;
+
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+});
+
+function prevSlide() {
+    showSlide(currentSlide - 1);
+}
+
+/* ⏱️ كل 8 ثواني */
+let autoSlideInterval = setInterval(nextSlide, 8000);
+
+function joinCompetition(name) {
     alert('You joined ' + name);
 }
 
 
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
-/* ================= EMAIL ================= */
-(function(){
-    emailjs.init("YOUR_PUBLIC_KEY");
-})();
-
-const form = document.getElementById("contactForm");
-
-if(form){
-form.addEventListener("submit", function(e){
-    e.preventDefault();
-
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let message = document.getElementById("message").value.trim();
-    let robot = document.getElementById("robot").checked;
-
-    if(!name || !email || !message){
-        alert("Please fill all required fields");
-        return;
-    }
-
-    if(!robot){
-        alert("Please confirm you are not a robot");
-        return;
-    }
-
-    emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
-        from_name: name,
-        from_email: email,
-        phone: phone,
-        message: message
-    })
-    .then(function(){
-        alert("Message sent successfully ✅");
-        form.reset();
-    }, function(error){
-        alert("Failed to send ❌");
-        console.log(error);
-    });
-});
-}
-
-/* ================= NAV ================= */
 function goToPage(page) {
     window.location.href = page;
 }
-
-/* ================= EVENTS ================= */
-const container = document.getElementById("eventsContainer");
-
-const events = [
-{
-    id:1,
-    img:"img/event2.png",
-    day:"06",
-    month:"Nov",
-    title:"College of Information Technology",
-
-    shortDesc:"AI conference discussing sustainability and innovation.",
-
-    fullDesc:`This conference focuses on Artificial Intelligence and its role in environmental sustainability.
-Experts from different fields will discuss innovative AI solutions for climate change and energy efficiency.
-The event includes keynote speakers, panel discussions, and interactive workshops.
-Students will present research and connect with professionals.
-It aims to promote awareness and build a smarter sustainable future.`,
-
-    time:"11:00 am - 5:00 pm",
-    location:"Conference Hall"
-},
-{
-    id:2,
-    img:"img/event3.png",
-    day:"09",
-    month:"Dec",
-    title:"Annual Scientific Day",
-
-    shortDesc:"Biotechnology student research presentations.",
-
-    fullDesc:`The Annual Scientific Day highlights student achievements in biotechnology research.
-Participants present real-world scientific projects.
-The event includes posters, demos, and expert evaluation.
-Faculty members give feedback for improvement.
-It encourages creativity and scientific excellence.`,
-
-    time:"10:00 am - 5:00 pm",
-    location:"MUST Conference Hall"
-},
-{
-    id:3,
-    img:"img/event4.jpeg",
-    day:"04",
-    month:"Feb",
-    title:"Ferrari: Driving Luxury Beyond...",
-
-    shortDesc:"Luxury branding and business strategy event.",
-
-    fullDesc:`This event explores luxury branding and global business strategies.
-Experts from Rome Business School share insights.
-Topics include marketing, innovation, and brand positioning.
-Students learn about premium business models.
-Networking opportunities with professionals are included.`,
-
-    time:"9:00 am - 9:30 am",
-    location:"Conference Hall"
-}
-];
-if(container){
-events.forEach((event,index)=>{
-container.innerHTML += `
-<div class="event-card" onclick="openModal(${index})">
-    <div class="image-box">
-        <img src="${event.img}">
-        <div class="date-box">
-            <div class="day">${event.day}</div>
-            <div class="month">${event.month}</div>
-        </div>
-    </div>
-
-    <div class="event-info">
-        <div class="meta">
-            <span>⏰ ${event.time}</span>
-            <span>📍 ${event.location}</span>
-        </div>
-
-        <h3>${event.title}</h3>
-        <p>${event.shortDesc}</p>
-    </div>
-</div>`;
-});
-}
-
-/* Modal Events */
-function openModal(index){
-const event = events[index];
-
-document.getElementById("modalImg").src = event.img;
-document.getElementById("modalTitle").innerText = event.title;
-
-// 👇 ده أهم سطر (5 سطور بس)
-let shortFull = event.fullDesc.split("\n").slice(0,5).join("\n");
-
-document.getElementById("modalDesc").innerText = shortFull;
-
-document.getElementById("modalTime").innerText = "⏰ " + event.time;
-document.getElementById("modalLocation").innerText = "📍 " + event.location;
-
-document.getElementById("eventModal").style.display="flex";
-}
-
-function closeModal(){
-document.getElementById("eventModal").style.display="none";
-}
-
-/* ================= NEWS ================= */
-const newsData = [
-{
-img:"img/ندوة.jpg",
-title:"Spreading awareness against FGM and supporting women empowerment.",
-author:"By Code95 Admin",
-date:"January 23, 2024",
-
-desc:"Raising awareness about FGM and women's rights.",
-
-fullDesc:`This event focuses on raising awareness about the dangers of FGM and highlights women's rights protection.
-Experts share real-life experiences to educate students.
-The initiative encourages community participation and empowerment.
-Attendees gain social awareness and advocacy skills.
-It is part of a long-term campaign for a safer society.`
-},
-{
-img:"img/new2.jpg",
-title:"The First Women's Football Team at Misr University.",
-author:"By Code95 Admin",
-date:"January 23, 2023",
-
-desc:"First women's football team at the university.",
-
-fullDesc:`Misr University introduces its first women's football team.
-This step promotes equality in sports.
-Professional training sessions have started.
-It empowers female students in athletics.
-It inspires future generations of athletes.`
-},
-{
-img:"img/news.jpg",
-title:"Ramadan Football Tournament",
-author:"By Habiba",
-date:"March 23, 2025",
-
-desc:"Inter-faculty Ramadan football competition.",
-
-fullDesc:`The Ramadan Football Tournament brings students together.
-Matches are held during Ramadan in a friendly atmosphere.
-Teams from different faculties participate.
-The event promotes teamwork and discipline.
-It is one of the most exciting student activities.`
-}
-];
-function openNews(index){
-const news = newsData[index];
-
-document.getElementById("newsImg").src = news.img;
-document.getElementById("newsTitle").innerText = news.title;
-document.getElementById("newsAuthor").innerText = news.author;
-document.getElementById("newsDate").innerText = news.date;
-
-// 👇 5 سطور فقط
-let shortDesc = news.fullDesc.split("\n").slice(0,5).join("\n");
-
-document.getElementById("newsDesc").innerText = shortDesc;
-
-document.getElementById("newsModal").style.display="flex";
-}
-
-function closeNews(){
-document.getElementById("newsModal").style.display="none";
-}
-
-/* ================= CLOSE MODALS ================= */
-window.onclick = function(e){
-let eventModal = document.getElementById("eventModal");
-let newsModal = document.getElementById("newsModal");
-
-if(e.target === eventModal) closeModal();
-if(e.target === newsModal) closeNews();
-}
-
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener("click", function(e) {
-        e.preventDefault();
-
-        const target = document.querySelector(this.getAttribute("href"));
-
-        window.scrollTo({
-            top: target.offsetTop - 140, // adjust navbar height
-            behavior: "smooth"
-        });
-    });
-});
-
- function goToCompetitions() {
-    window.location.href = "competitions.html";
-  }
-
-  
- 
-
-document.addEventListener("DOMContentLoaded", function () {
-    window.initCompetitionSlider = function () {
-        const competitionsSection = document.querySelector("#competitions");
-        const track = competitionsSection ? competitionsSection.querySelector(".slider-track") : null;
-        const nextBtn = competitionsSection ? competitionsSection.querySelector(".next") : null;
-        const prevBtn = competitionsSection ? competitionsSection.querySelector(".prev") : null;
-        if (!competitionsSection || !track || !nextBtn || !prevBtn) return;
-
-        if (window._competitionSliderInterval) {
-            clearInterval(window._competitionSliderInterval);
-        }
-
-        track.querySelectorAll('[data-clone="true"]').forEach(function (slide) {
-            slide.remove();
-        });
-
-        const realSlides = Array.from(track.querySelectorAll('.slide'));
-        if (!realSlides.length) return;
-
-        let currentSlide = 0;
-
-        if (realSlides.length > 1) {
-            const firstClone = realSlides[0].cloneNode(true);
-            const lastClone = realSlides[realSlides.length - 1].cloneNode(true);
-            firstClone.dataset.clone = 'true';
-            lastClone.dataset.clone = 'true';
-            track.appendChild(firstClone);
-            track.insertBefore(lastClone, track.firstChild);
-            currentSlide = 1;
-        }
-
-        function applyTransform(withTransition) {
-            track.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
-            track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
-
-        applyTransform(false);
-
-        function nextSlide() {
-            const slides = track.querySelectorAll('.slide');
-            if (slides.length <= 1) return;
-            currentSlide++;
-            applyTransform(true);
-        }
-
-        function prevSlide() {
-            const slides = track.querySelectorAll('.slide');
-            if (slides.length <= 1) return;
-            currentSlide--;
-            applyTransform(true);
-        }
-
-        nextBtn.onclick = nextSlide;
-        prevBtn.onclick = prevSlide;
-
-        track.ontransitionend = function () {
-            const slides = track.querySelectorAll('.slide');
-            if (slides.length <= 1 || realSlides.length <= 1) return;
-
-            if (currentSlide === slides.length - 1) {
-                currentSlide = 1;
-                applyTransform(false);
-            } else if (currentSlide === 0) {
-                currentSlide = realSlides.length;
-                applyTransform(false);
-            }
-        };
-
-        window._competitionSliderInterval = setInterval(nextSlide, 8000);
-    };
-
-    window.initCompetitionSlider();
-});
-
-
 </script>
 
-
-  
-  <script src="js/api.js"></script>
+<script src="js/api.js"></script>
   <script src="js/index-api.js"></script>
+  <script src="js/competitions-home.js"></script>
   <script src="js/activities-home.js"></script>
   <script src="js/script.js"></script>
 
 </body>
 </html>
+
+

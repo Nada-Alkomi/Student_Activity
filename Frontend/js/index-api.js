@@ -17,6 +17,22 @@
 (function () {
     'use strict';
 
+    const API_BASE_URL =
+        window.location.hostname === 'localhost' ||
+        window.location.protocol === 'file:' ||
+        !window.location.hostname ||
+        window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5184'
+            : 'https://must.runasp.net';
+    const EVENT_PLACEHOLDER =
+        'data:image/svg+xml;utf8,' +
+        encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">' +
+            '<rect width="1200" height="800" fill="#eef2f7"/>' +
+            '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="42">No event image</text>' +
+            '</svg>'
+        );
+
     // ════════════════════════════════════════
     // CONTACT FORM
     // ════════════════════════════════════════
@@ -46,215 +62,449 @@
             }
         });
     }
+
+    function normalizeMenuLabel(value) {
+        return String(value || '').trim().toLowerCase();
+    }
+
+    function buildMenuHref(item) {
+        const rawUrl = String((item && item.url) || '').trim();
+        if (rawUrl) return rawUrl;
+
+        const label = normalizeMenuLabel(item && item.name);
+        if (label === 'activities') return '#activity';
+        if (label === 'events') return '#events';
+        if (label === 'news') return '#news';
+        if (label === 'competitions' || label === 'competition') return '#competitions';
+        if (label === 'clubs') return '#clubs';
+        if (label === 'contact us' || label === 'contact') return '#contact';
+
+        return '#';
+    }
+
+    function buildMenuItemMarkup(item) {
+        const href = buildMenuHref(item);
+        const subMenus = Array.isArray(item && item.subMenus) ? item.subMenus : [];
+        const name = esc(item && item.name ? item.name : 'Menu');
+
+        if (!subMenus.length) {
+            return '<li class="menu-item menu-item-api"><a href="' + esc(href) + '">' + name + '</a></li>';
+        }
+
+        return '<li class="menu-item menu-item-api">' +
+            '<a href="' + esc(href) + '">' + name + '</a>' +
+            '<div class="mega-menu"><div class="mega-column">' +
+            subMenus.map(function (subItem) {
+                return '<a href="' + esc(buildMenuHref(subItem)) + '">' + esc(subItem && subItem.name ? subItem.name : 'Sub Menu') + '</a>';
+            }).join('') +
+            '</div></div></li>';
+    }
+
+    function mergeSubMenusIntoExistingItem(menuItemElement, apiItem) {
+        if (!menuItemElement || !apiItem) return;
+
+        const subMenus = Array.isArray(apiItem.subMenus) ? apiItem.subMenus : [];
+        if (!subMenus.length) return;
+
+        let megaMenu = menuItemElement.querySelector('.mega-menu');
+        let megaColumn = megaMenu ? megaMenu.querySelector('.mega-column') : null;
+
+        if (!megaMenu) {
+            megaMenu = document.createElement('div');
+            megaMenu.className = 'mega-menu';
+            megaColumn = document.createElement('div');
+            megaColumn.className = 'mega-column';
+            megaMenu.appendChild(megaColumn);
+            menuItemElement.appendChild(megaMenu);
+        } else if (!megaColumn) {
+            megaColumn = document.createElement('div');
+            megaColumn.className = 'mega-column';
+            megaMenu.appendChild(megaColumn);
+        }
+
+        const existingSubNames = new Set(
+            Array.from(megaColumn.querySelectorAll('a'))
+                .map(function (link) { return normalizeMenuLabel(link.textContent); })
+                .filter(Boolean)
+        );
+
+        subMenus.forEach(function (subItem) {
+            const subName = normalizeMenuLabel(subItem && subItem.name);
+            if (!subName || existingSubNames.has(subName)) return;
+
+            const link = document.createElement('a');
+            link.href = buildMenuHref(subItem);
+            link.textContent = subItem.name || 'Sub Menu';
+            megaColumn.appendChild(link);
+            existingSubNames.add(subName);
+        });
+    }
+
+    function initDynamicMenu() {
+        if (!window.MustAPI || !window.MustAPI.getMenu) return;
+
+        const menuList = document.querySelector('.slider-menu');
+        if (!menuList) return;
+
+        window.MustAPI.getMenu()
+            .then(function (items) {
+                if (!Array.isArray(items) || !items.length) return;
+
+                const existingItemsByName = new Map();
+                Array.from(menuList.querySelectorAll(':scope > .menu-item'))
+                    .forEach(function (menuItem) {
+                        const link = menuItem.querySelector(':scope > a');
+                        const name = normalizeMenuLabel(link && link.textContent);
+                        if (name) existingItemsByName.set(name, menuItem);
+                    });
+
+                const dynamicItems = items.filter(function (item) {
+                    if (!item || !item.name) return false;
+
+                    const existingItem = existingItemsByName.get(normalizeMenuLabel(item.name));
+                    if (existingItem) {
+                        mergeSubMenusIntoExistingItem(existingItem, item);
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                if (!dynamicItems.length) return;
+
+                menuList.insertAdjacentHTML(
+                    'beforeend',
+                    dynamicItems.map(buildMenuItemMarkup).join('')
+                );
+            })
+            .catch(function (err) {
+                console.error('Menu API error:', err);
+            });
+    }
+
     initContactForm();
+    initDynamicMenu();
 
     // ════════════════════════════════════════
     // EVENTS  (index.html shows first 3)
-    // ════════════════════════════════════════
-    function initEvents() {
-        const container = document.getElementById('eventsContainer');
-        if (!container) return;
+// ════════════════════════════════════════
+// EVENTS  (عرض أول 3 فقط)
+// ════════════════════════════════════════
+function initEvents() {
+    const container = document.getElementById('eventsContainer');
+    if (!container) return;
 
-        MustAPI.getEvents()
-            .then(function (data) {
-                if (!data || !Array.isArray(data) || data.length === 0) {
-                    console.log('Events: no data from API, keeping static content.');
-                    return;
+    MustAPI.getEvents()
+        .then(function (data) {
+
+            if (!Array.isArray(data) || data.length === 0) {
+                console.log('Events: no data from API');
+                container.innerHTML = `<div style="text-align:center;padding:30px;">No events</div>`;
+                return;
+            }
+
+            // 🔥 أول 3 فقط
+            const top3 = data.slice(0, 3);
+
+            // حفظهم للمودال
+            window._apiEvents = top3;
+
+            container.innerHTML = '';
+
+            const fragment = document.createDocumentFragment();
+
+            top3.forEach(function (event, index) {
+
+                const date = event.eventDate ? new Date(event.eventDate) : null;
+
+                const day = date ? String(date.getDate()).padStart(2, '0') : '--';
+
+                const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                const month = date ? monthNames[date.getMonth()] : '--';
+
+                const baseUrl = API_BASE_URL;
+
+                let img = event.imageUrl || event.image || '';
+                let hasRealImage = Boolean(img);
+
+                if (!hasRealImage) {
+                    img = EVENT_PLACEHOLDER;
+                } else if (img.startsWith('/')) {
+                    img = baseUrl + img;
+                } else if (!img.startsWith('http')) {
+                    img = baseUrl + '/uploads/events/' + img;
                 }
 
-                // Keep track of API events for modal
-                window._apiEvents = data;
+                if (hasRealImage) {
+                    img = img + '?v=' + (event.id || Date.now());
+                }
 
-                // Clear static content
-                container.innerHTML = '';
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.style.cursor = 'pointer';
 
-                // Show up to 3 on homepage
-                const eventsToShow = data.slice(0, 3);
+                card.innerHTML = `
+                    <div class="image-box">
+                        <img src="${img}" alt="${event.title || ''}"
+                             onerror="this.onerror=null;this.src='${EVENT_PLACEHOLDER}'">
 
-                eventsToShow.forEach(function (event, index) {
-                    const date       = event.eventDate ? new Date(event.eventDate) : null;
-                    const day        = date ? String(date.getDate()).padStart(2, '0') : '--';
-                    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-                    const month      = date ? monthNames[date.getMonth()] : '--';
+                        <div class="date-box">
+                            <div class="day">${day}</div>
+                            <div class="month">${month}</div>
+                        </div>
+                    </div>
 
-                    // Resolve image URL
-                    let evtImg = event.imageUrl || event.image || '';
-                    if (evtImg && evtImg.startsWith('/')) evtImg = 'https://must.runasp.net' + evtImg;
-                    if (!evtImg) evtImg = 'img/event2.png';
+                    <div class="event-info">
+                        <div class="meta">
+                            <span>📅 ${date ? date.toLocaleDateString() : 'TBA'}</span>
+                            ${event.location ? `<span>📍 ${event.location}</span>` : ''}
+                        </div>
 
-                    const card = `
-                        <div class="event-card" onclick="openApiEventModal(${index})" style="cursor:pointer;">
-                            <div class="image-box">
-                                <img src="${evtImg}" alt="${escHtml(event.title)}" onerror="this.src='img/event2.png'">
-                                <div class="date-box">
-                                    <div class="day">${day}</div>
-                                    <div class="month">${month}</div>
-                                </div>
-                            </div>
-                            <div class="event-info">
-                                <div class="meta">
-                                    <span>📅 ${date ? date.toLocaleDateString() : 'TBA'}</span>
-                                    ${event.location ? `<span>📍 ${escHtml(event.location)}</span>` : ''}
-                                </div>
-                                <h3>${escHtml(event.title)}</h3>
-                                <p>${escHtml((event.description || '').slice(0, 100))}${event.description && event.description.length > 100 ? '…' : ''}</p>
-                            </div>
-                        </div>`;
-                    container.innerHTML += card;
-                });
+                        <h3>${event.title || ''}</h3>
+                        <p>${(event.description || '').slice(0, 100)}</p>
+                    </div>
+                `;
 
-                console.log('Events loaded from API:', data.length);
-            })
-            .catch(function (err) {
-                console.error('Events API error:', err);
-                // Keep static content on failure – do nothing
+                card.addEventListener('click', () => openApiEventModal(index));
+
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
+
+            console.log('Top 3 Events loaded');
+        })
+        .catch(function (err) {
+            console.error('Events API error:', err);
+        });
+}
+
+// INIT
+window.initEvents = initEvents;
+initEvents();
+
+/** ================= MODAL ================= */
+window.openApiEventModal = function (index) {
+    const events = window._apiEvents;
+    if (!events || !events[index]) return;
+
+    const event = events[index];
+
+    const date = event.eventDate
+        ? new Date(event.eventDate).toLocaleDateString()
+        : 'TBA';
+
+    const baseUrl = API_BASE_URL;
+
+    let img = event.imageUrl || event.image || '';
+    let hasRealImage = Boolean(img);
+
+    if (!hasRealImage) {
+        img = EVENT_PLACEHOLDER;
+    } else if (img.startsWith('/')) {
+        img = baseUrl + img;
+    } else if (!img.startsWith('http')) {
+        img = baseUrl + '/uploads/events/' + img;
     }
-    initEvents();
 
-    /** Open event modal with API data */
-    window.openApiEventModal = function (index) {
-        const events = window._apiEvents;
-        if (!events || !events[index]) return;
+    if (hasRealImage) {
+        img = img + '?v=' + (event.id || Date.now());
+    }
 
-        const event = events[index];
-        const date  = event.eventDate ? new Date(event.eventDate).toLocaleDateString() : 'TBA';
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalTime = document.getElementById('modalTime');
+    const modalLocation = document.getElementById('modalLocation');
+    const modal = document.getElementById('eventModal');
 
-        const modalImg   = document.getElementById('modalImg');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDesc  = document.getElementById('modalDesc');
-        const modalTime  = document.getElementById('modalTime');
-        const modalLoc   = document.getElementById('modalLocation');
-        const modal      = document.getElementById('eventModal');
+    if (modalImg) {
+        modalImg.src = img;
+        modalImg.onerror = function () {
+            this.onerror = null;
+            this.src = EVENT_PLACEHOLDER;
+        };
+    }
 
-        let mEvtImg = event.imageUrl || event.image || '';
-        if (mEvtImg && mEvtImg.startsWith('/')) mEvtImg = 'https://must.runasp.net' + mEvtImg;
-        if (!mEvtImg) mEvtImg = 'img/event2.png';
-        if (modalImg)   modalImg.src           = mEvtImg;
-        if (modalTitle) modalTitle.innerText   = event.title || '';
-        if (modalDesc)  modalDesc.innerText    = event.description || '';
-        if (modalTime)  modalTime.innerText    = '📅 ' + date;
-        if (modalLoc)   modalLoc.innerText     = event.location ? '📍 ' + event.location : '';
-        if (modal)      modal.style.display    = 'flex';
-    };
+    if (modalTitle) modalTitle.innerText = event.title || '';
+    if (modalDesc) modalDesc.innerText = event.description || '';
+    if (modalTime) modalTime.innerText = '📅 ' + date;
+    if (modalLocation) modalLocation.innerText = event.location ? '📍 ' + event.location : '';
+
+    if (modal) modal.style.display = 'flex';
+};
+
+/** CLOSE MODAL */
+window.closeModal = function () {
+    const modal = document.getElementById('eventModal');
+    if (modal) modal.style.display = 'none';
+};
+
 
     // ════════════════════════════════════════
     // NEWS  (index.html shows first 3)
     // ════════════════════════════════════════
-    function initNews() {
-        const newsContainer = document.querySelector('#news .news-container');
-        if (!newsContainer) return;
+(function () {
+    'use strict';
+
+    const container = document.getElementById("newsContainer");
+    if (!container) return;
+
+    window._apiNews = [];
+
+    const BASE_URL = API_BASE_URL;
+
+    // ================= IMAGE FIX =================
+    function fixImage(img) {
+        if (!img) return "img/news5.jpg";
+
+        img = img.trim();
+
+        if (img.startsWith("http")) return img;
+
+        if (img.startsWith("/")) {
+            return BASE_URL + img;
+        }
+
+        return BASE_URL + "/uploads/news/" + img;
+    }
+
+    // ================= LOAD NEWS =================
+    function loadNews() {
 
         MustAPI.getNews()
-            .then(function (data) {
-                if (!data || !Array.isArray(data) || data.length === 0) {
-                    console.log('News: no data from API, keeping static content.');
-                    return;
-                }
+            .then(data => {
 
-                window._apiNews = data;
+                if (!Array.isArray(data)) return;
 
-                // Clear static news cards
-                newsContainer.innerHTML = '';
+                // 🔥 أول 3 فقط
+                const top3 = data.slice(0, 3);
 
-                // Show up to 3 on homepage
-                const newsToShow = data.slice(0, 3);
+                window._apiNews = top3;
 
-                newsToShow.forEach(function (item, index) {
-                    const date = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '';
-                    let imgSrc = item.imageUrl || item.image || '';
-                    if (imgSrc && imgSrc.startsWith('/')) imgSrc = 'https://must.runasp.net' + imgSrc;
-                    if (!imgSrc) imgSrc = 'img/news5.jpg';
+                container.innerHTML = "";
 
-                    const card = `
-                        <div class="card" onclick="openApiNewsModal(${index})" style="cursor:pointer;">
-                            <img src="${escHtml(imgSrc)}" alt="${escHtml(item.title)}" onerror="this.src='img/news5.jpg'" style="width:100%;height:200px;object-fit:cover;">
-                            <div class="card-content">
-                                <div class="meta">
-                                    <span><i class="fa-regular fa-user"></i> MUST Admin</span>
-                                    ${date ? `<span><i class="fa-regular fa-calendar"></i> ${date}</span>` : ''}
-                                </div>
-                                <h3>${escHtml(item.title)}</h3>
+                const fragment = document.createDocumentFragment();
+
+                top3.forEach((item, index) => {
+
+                    let img = fixImage(item.imageUrl || item.image);
+                    img = img + "?v=" + (item.id || index);
+
+                    const card = document.createElement("div");
+                    card.className = "card events";
+                    card.style.cursor = "pointer";
+
+                    card.innerHTML = `
+                        <img src="${img}"
+                             alt="${item.title || ''}"
+                             onerror="this.onerror=null;this.src='img/news5.jpg';"
+                             style="width:100%;height:200px;object-fit:cover;">
+
+                        <div class="card-content">
+                            <div class="meta">
+                                <span><i class="fa-regular fa-user"></i> MUST Admin</span>
+                                <span><i class="fa-regular fa-calendar"></i>
+                                    ${item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ''}
+                                </span>
                             </div>
-                        </div>`;
-                    newsContainer.innerHTML += card;
+
+                            <h3>${item.title || ''}</h3>
+                        </div>
+                    `;
+
+                    card.addEventListener("click", () => openApiNewsModal(index));
+
+                    fragment.appendChild(card);
                 });
 
-                console.log('News loaded from API:', data.length);
+                container.appendChild(fragment);
+
+                console.log("Top 3 News loaded");
             })
-            .catch(function (err) {
-                console.error('News API error:', err);
-            });
+            .catch(err => console.error("News error:", err));
     }
-    initNews();
-    setInterval(initNews, 5000);
 
-    /** Open news modal with API data */
+    // ================= MODAL =================
     window.openApiNewsModal = function (index) {
-        const news = window._apiNews;
-        if (!news || !news[index]) return;
 
-        const item = news[index];
-        const date = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '';
+        const item = window._apiNews[index];
+        if (!item) return;
 
-        const newsImg    = document.getElementById('newsImg');
-        const newsTitle  = document.getElementById('newsTitle');
-        const newsAuthor = document.getElementById('newsAuthor');
-        const newsDate   = document.getElementById('newsDate');
-        const newsDesc   = document.getElementById('newsDesc');
-        const modal      = document.getElementById('newsModal');
+        let img = fixImage(item.imageUrl || item.image);
+        img = img + "?v=" + (item.id || 0);
 
-        let imgSrc = item.imageUrl || item.image || '';
-        if (imgSrc && imgSrc.startsWith('/')) imgSrc = 'https://must.runasp.net' + imgSrc;
-        if (!imgSrc) imgSrc = 'img/news5.jpg';
+        const modalImg = document.getElementById("newsImg");
+        if (modalImg) {
+            modalImg.src = img;
+            modalImg.onerror = function () {
+                this.src = "img/news5.jpg";
+            };
+        }
 
-        if (newsImg)    newsImg.src          = imgSrc;
-        if (newsTitle)  newsTitle.innerText  = item.title || '';
-        if (newsAuthor) newsAuthor.innerText = 'MUST Admin';
-        if (newsDate)   newsDate.innerText   = date;
-        if (newsDesc)   newsDesc.innerText   = item.content || item.description || '';
-        if (modal)      modal.style.display  = 'flex';
+        const title = document.getElementById("newsTitle");
+        const desc = document.getElementById("newsDesc");
+        const date = document.getElementById("newsDate");
+
+        if (title) title.innerText = item.title || "";
+        if (desc) desc.innerText = item.description || item.content || "";
+        if (date) date.innerText = item.createdAt
+            ? new Date(item.createdAt).toLocaleDateString()
+            : "";
+
+        const modal = document.getElementById("newsModal");
+        if (modal) modal.style.display = "flex";
     };
 
+    // ================= INIT =================
+    window.initNews = loadNews;
+    window.closeNewsModal = function () {
+        const modal = document.getElementById("newsModal");
+        if (modal) modal.style.display = "none";
+    };
+    loadNews();
+
+})();
     // ════════════════════════════════════════
     // SLIDER (optional – load from API if available)
     // ════════════════════════════════════════
     function initSlider() {
-        // Show all slides returned by the API in their configured order
+        // Replace any static slides with the API-managed slider content
         MustAPI.getSlider()
             .then(function (data) {
-                if (!data || !Array.isArray(data) || data.length === 0) return;
-
-                const slides = data
-                    .filter(function (s) { return !!(s.imageUrl || s.image); })
-                    .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
-                if (slides.length === 0) return;
-
                 const container = document.querySelector('.content-container');
                 if (!container) return;
 
                 const controls = container.querySelector('.carousel-controls');
                 if (!controls) return;
 
-                const existingSlides = Array.from(container.querySelectorAll('.carousel-slide'));
-                const existingBackgrounds = new Set(
-                    existingSlides
-                        .map(function (slide) { return slide.style.backgroundImage; })
-                        .filter(Boolean)
-                );
+                Array.from(container.querySelectorAll('.carousel-slide')).forEach(function (slideEl) {
+                    slideEl.remove();
+                });
+
+                const slides = (Array.isArray(data) ? data : [])
+                    .filter(function (s) { return !!(s.imageUrl || s.image); })
+                    .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+
+                controls.style.display = slides.length > 1 ? 'flex' : 'none';
+
+                if (slides.length === 0) {
+                    if (typeof window.currentSlide === 'number') {
+                        window.currentSlide = 0;
+                    }
+                    console.log('Slider API returned no slides');
+                    return;
+                }
 
                 slides.forEach(function (slide) {
                     let imgPath = slide.imageUrl || slide.image;
                     if (imgPath) {
                         const fullImageUrl = imgPath.startsWith('http') ? imgPath : BASE_URL + imgPath;
-                        const backgroundImage = `url('${fullImageUrl}')`;
-                        if (existingBackgrounds.has(backgroundImage)) return;
 
                         const div = document.createElement('div');
                         div.className = 'carousel-slide';
-                        div.style.backgroundImage = backgroundImage;
+                        div.style.backgroundImage = `url('${fullImageUrl}')`;
                         container.insertBefore(div, controls);
-                        existingBackgrounds.add(backgroundImage);
                     }
                 });
 
@@ -286,7 +536,7 @@
         const container = document.getElementById('activitiesContainer');
         if (!container || !window.MustAPI) return;
 
-        fetch('https://must.runasp.net/api/Activities')
+        fetch(`${API_BASE_URL}/api/Activities`)
             .then(function(res) {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 return res.json();
@@ -304,7 +554,7 @@
                     // Fix image URL — prepend base URL if path is relative
                     var imgUrl = activity.imageUrl || activity.image || '';
                     if (imgUrl && imgUrl.startsWith('/')) {
-                        imgUrl = 'https://must.runasp.net' + imgUrl;
+                        imgUrl = API_BASE_URL + imgUrl;
                     }
                     if (!imgUrl) imgUrl = 'img/OIP.webp';
 
@@ -327,93 +577,219 @@
                 console.error('[index-api] Activities fetch error:', err);
             });
     }
+    window.initActivities = initActivities;
     initActivities();
+(function () {
+    'use strict';
 
-    // ════════════════════════════════════════
-    // CLUBS
-    // ════════════════════════════════════════
-    function initClubs() {
-        // Try both possible container IDs (index.html uses #clubs section, clubs.html has #clubsContainer)
-        const grid = document.getElementById('clubsContainer') ||
-                     document.querySelector('#clubs .clubs-grid') ||
-                     document.querySelector('.clubs-section .clubs-grid');
-        if (!grid) return;
+    const BASE_URL = API_BASE_URL;
 
-        MustAPI.getClubs()
-            .then(function (data) {
-                if (!data || !Array.isArray(data) || data.length === 0) return;
-                grid.innerHTML = '';
-                data.forEach(function (club) {
-                    let imgSrc = club.imageUrl || club.image || '';
-                    if (imgSrc && imgSrc.startsWith('/')) imgSrc = 'https://must.runasp.net' + imgSrc;
-                    if (!imgSrc) imgSrc = 'img/event2.png';
-                    const registrationUrl = './registerClub.html?type=club&id=' + encodeURIComponent(club.id) + '&title=' + encodeURIComponent(club.name || '');
-                    grid.innerHTML += `
-                        <div class="club-card">
-                            <img src="${escHtml(imgSrc)}" alt="${escHtml(club.name)}" class="club-img"
-                                 onerror="this.src='img/event2.png'">
-                            <h3>${escHtml(club.name)}</h3>
-                            <p>${escHtml((club.description || '').slice(0, 180))}${club.description && club.description.length > 180 ? '\u2026' : ''}</p>
-                            <button class="join-btn"><a href="${registrationUrl}">Registration</a></button>
-                        </div>`;
-                });
-                console.log('Clubs loaded from API:', data.length);
-            })
-            .catch(function (err) { console.error('Clubs API error:', err); });
+    // ───────────────────────────────
+    // HELPER (IMAGE FIX)
+    // ───────────────────────────────
+    function getImage(path, fallback = 'img/event2.png') {
+        if (!path) return fallback;
+
+        if (path.startsWith('http')) return path;
+
+        return BASE_URL + path;
     }
-    initClubs();
 
-    // ════════════════════════════════════════
+    // ═══════════════════════════════
+ (function () {
+    'use strict';
+
+    const BASE_URL = API_BASE_URL;
+
+    const grid = document.getElementById('clubsContainer');
+
+    // ───────────────────────────────
+    // LOAD CLUBS
+    // ───────────────────────────────
+    async function loadClubs() {
+        try {
+            const res = await fetch(`${BASE_URL}/api/Clubs`);
+
+            if (!res.ok) {
+                console.error("API Error:", res.status);
+                return;
+            }
+
+            const data = await res.json();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                console.log("No clubs found");
+                return;
+            }
+
+            grid.innerHTML = '';
+
+            data.forEach(club => {
+
+                // ───── IMAGE FIX ─────
+                let imgSrc = club.imageUrl;
+
+                if (!imgSrc) {
+                    imgSrc = 'img/event2.png';
+                } else if (!imgSrc.startsWith('http')) {
+                    imgSrc = BASE_URL + imgSrc;
+                }
+
+                const url =
+                    `./registerClub.html?type=club&id=${club.id}&title=${encodeURIComponent(club.name || '')}`;
+
+                grid.innerHTML += `
+                    <div class="club-card">
+
+                        <img src="${imgSrc}"
+                             alt="${escapeHtml(club.name)}"
+                             class="club-img"
+                             onerror="this.src='img/event2.png'">
+
+                        <h3>${escapeHtml(club.name)}</h3>
+
+                        <p>
+                            ${escapeHtml((club.description || '').slice(0, 180))}
+                            ${club.description && club.description.length > 180 ? '…' : ''}
+                        </p>
+
+                        <button class="join-btn">
+                            <a href="${url}">Registration</a>
+                        </button>
+
+                    </div>
+                `;
+            });
+
+            console.log("Clubs loaded:", data.length);
+
+        } catch (err) {
+            console.error("Clubs error:", err);
+        }
+    }
+
+    // ───────────────────────────────
+    // ESCAPE HTML
+    // ───────────────────────────────
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // ───────────────────────────────
+    // START
+    // ───────────────────────────────
+    window.initClubs = loadClubs;
+    loadClubs();
+
+})();
+
+    // ───────────────────────────────
+    // INIT
+    // ───────────────────────────────
+  
+
+
+    // ═══════════════════════════════
     // COMPETITIONS
-    // ════════════════════════════════════════
+    // ═══════════════════════════════
     function initCompetitions() {
-        // Try both index.html slider-track and a standalone container
+
         const track = document.getElementById('competitionsContainer') ||
                       document.querySelector('#competitions .slider-track');
+
         if (!track) return;
 
         MustAPI.getCompetitions()
             .then(function (data) {
-                if (!data || !Array.isArray(data) || data.length === 0) return;
+
+                if (!Array.isArray(data) || data.length === 0) return;
+
                 track.innerHTML = '';
+
                 data.forEach(function (comp) {
-                    let imgSrc = comp.imageUrl || comp.image || '';
-                    if (imgSrc && imgSrc.startsWith('/')) imgSrc = 'https://must.runasp.net' + imgSrc;
-                    if (!imgSrc) imgSrc = 'img/event2.png';
-                    const registrationUrl = './registerClub.html?type=competition&id=' + encodeURIComponent(comp.id) + '&title=' + encodeURIComponent(comp.title || comp.name || 'Competition');
+
+                    const imgSrc = getImage(comp.imageUrl);
+
+                    const registrationUrl =
+                        './registerClub.html?type=competition&id=' +
+                        encodeURIComponent(comp.id) +
+                        '&title=' +
+                        encodeURIComponent(comp.title || comp.name || 'Competition');
+
                     const dateStr = comp.startDate
-                        ? '\ud83d\udcc5 Starts: ' + new Date(comp.startDate).toLocaleDateString()
-                        : (comp.endDate ? '\ud83c\udfc1 Deadline: ' + new Date(comp.endDate).toLocaleDateString() : '');
+                        ? '📅 Starts: ' + new Date(comp.startDate).toLocaleDateString()
+                        : (comp.endDate
+                            ? '🏁 Deadline: ' + new Date(comp.endDate).toLocaleDateString()
+                            : '');
+
                     track.innerHTML += `
                         <div class="slide">
+
                             <div class="competition-card">
-                                <img src="${escHtml(imgSrc)}" class="comp-img"
+
+                                <img src="${esc(imgSrc)}"
+                                     class="comp-img"
                                      onerror="this.src='img/event2.png'">
-                                <h3>${escHtml(comp.title || comp.name)}</h3>
-                                <p class="comp-desc">${escHtml((comp.description || '').slice(0, 180))}${comp.description && comp.description.length > 180 ? '\u2026' : ''}</p>
-                                ${dateStr ? `<div class="comp-date">${escHtml(dateStr)}</div>` : ''}
-                                <button class="join-btn"><a href="${registrationUrl}">Registration</a></button>
+
+                                <h3>${esc(comp.title || comp.name)}</h3>
+
+                                <p class="comp-desc">
+                                    ${esc((comp.description || '').slice(0, 180))}
+                                    ${comp.description && comp.description.length > 180 ? '…' : ''}
+                                </p>
+
+                                ${dateStr ? `<div class="comp-date">${esc(dateStr)}</div>` : ''}
+
+                                <button class="join-btn">
+                                    <a href="${registrationUrl}">Registration</a>
+                                </button>
+
                             </div>
-                        </div>`;
+
+                        </div>
+                    `;
                 });
+
                 if (typeof window.initCompetitionSlider === 'function') {
                     window.initCompetitionSlider();
                 }
-                console.log('Competitions loaded from API:', data.length);
+
+                console.log("Competitions loaded:", data.length);
+
             })
-            .catch(function (err) { console.error('Competitions API error:', err); });
+            .catch(err => console.error("Competitions API error:", err));
     }
+
+    // ═══════════════════════════════
+    // ESCAPE HTML
+    // ═══════════════════════════════
+    function esc(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // ═══════════════════════════════
+    // START
+    // ═══════════════════════════════
+  
+    window.initCompetitions = initCompetitions;
     initCompetitions();
+
+})();
+
 
     // ════════════════════════════════════════
     // AUTO-REFRESH LIVE DATA (5 seconds)
     // ════════════════════════════════════════
-    setInterval(initActivities, 5000);
-    setInterval(initEvents, 5000);
-    setInterval(initNews, 5000);
-    setInterval(initClubs, 5000);
-    setInterval(initCompetitions, 5000);
-
     function escHtml(str) {
         if (!str) return '';
         return String(str)

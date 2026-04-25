@@ -8,7 +8,11 @@
 (function() {
     'use strict';
 
-    const BASE_URL = 'https://must.runasp.net';
+    const BASE_URL =
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5184'
+            : 'https://must.runasp.net';
     const API_URL = `${BASE_URL}/api/News`;
 
     // 1. Get ID from URL query string

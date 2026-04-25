@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    const DETAILS_API_BASE_URL =
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5184'
+            : 'https://must.runasp.net';
+
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
 
@@ -25,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (imgEl) {
             let imgUrl = activity.imageUrl || activity.image || 'img/OIP.webp';
             if (imgUrl && imgUrl.startsWith('/')) {
-                imgUrl = BASE_URL + imgUrl;
+                imgUrl = DETAILS_API_BASE_URL + imgUrl;
             }
             imgEl.src = imgUrl;
             imgEl.alt = activity.title || 'Activity Image';

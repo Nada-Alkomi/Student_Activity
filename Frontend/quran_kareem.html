@@ -1626,49 +1626,7 @@
     alert('You joined ' + name);
 }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-<script>
-(function(){
-    emailjs.init("YOUR_PUBLIC_KEY"); // هنغيرها كمان شوية
-})();
-
-document.getElementById("contactForm").addEventListener("submit", function(e){
-    e.preventDefault();
-
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let message = document.getElementById("message").value.trim();
-    let robot = document.getElementById("robot").checked;
-
-    // Validation
-    if(!name || !email || !message){
-        alert("Please fill all required fields");
-        return;
-    }
-
-    if(!robot){
-        alert("Please confirm you are not a robot");
-        return;
-    }
-
-    // إرسال
-    emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
-        from_name: name,
-        from_email: email,
-        phone: phone,
-        message: message
-    })
-    .then(function(){
-        alert("Message sent successfully ✅");
-        document.getElementById("contactForm").reset();
-    }, function(error){
-        alert("Failed to send ❌");
-        console.log(error);
-    });
-});
-
+    <script>
  function goToPage(page) {
             window.location.href = page;
         }
@@ -1677,4 +1635,5 @@ document.getElementById("contactForm").addEventListener("submit", function(e){
   <script src="js/script.js"></script>
 </body>
 </html>
+
 

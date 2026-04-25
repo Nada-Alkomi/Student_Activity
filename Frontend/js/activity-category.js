@@ -29,10 +29,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 });
 
+const CATEGORY_API_BASE_URL =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5184'
+        : 'https://must.runasp.net';
+
 function renderActivityCard(activity) {
     let imgUrl = activity.imageUrl || activity.image || 'img/OIP.webp';
     if (imgUrl && imgUrl.startsWith('/')) {
-        imgUrl = BASE_URL + imgUrl;
+        imgUrl = CATEGORY_API_BASE_URL + imgUrl;
     }
 
     const desc = (activity.description || '').length > 140

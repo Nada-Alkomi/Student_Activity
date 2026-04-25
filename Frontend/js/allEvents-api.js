@@ -1,54 +1,77 @@
-/**
- * allEvents-api.js  –  API integration for allEvents.html
- *
- * Replaces the static `events` array with live data from GET /api/Events.
- * The existing card template and modal structure remain untouched.
- *
- * HOW TO USE:
- *   Add just before </body> in allEvents.html:
- *     <script src="js/api.js"></script>
- *     <script src="js/allEvents-api.js"></script>
- */
-
 (function () {
     'use strict';
 
     const container = document.getElementById('eventsContainer');
-    if (!container) return;
+    if (!container || !window.MustAPI) return;
 
-    // Global store for API events (used by openModal / click handlers)
-    window._apiAllEvents = [];
+    const BASE_URL =
+        window.location.hostname === 'localhost' ||
+        window.location.protocol === 'file:' ||
+        !window.location.hostname ||
+        window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5184'
+            : 'https://must.runasp.net';
+    const EVENT_PLACEHOLDER =
+        'data:image/svg+xml;utf8,' +
+        encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">' +
+            '<rect width="1200" height="800" fill="#eef2f7"/>' +
+            '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="42">No event image</text>' +
+            '</svg>'
+        );
 
-    // ── Load Events from API ──────────────────────────────────────
-    function initAllEvents() {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    window._apiEvents = [];
+
+    function escapeHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function getEventImage(imagePath) {
+        if (!imagePath) return EVENT_PLACEHOLDER;
+        if (imagePath.startsWith('http')) return imagePath;
+        if (imagePath.startsWith('/')) return BASE_URL + imagePath;
+        return BASE_URL + '/uploads/events/' + imagePath;
+    }
+
+    function renderEvents() {
         MustAPI.getEvents()
-        .then(function (data) {
-            if (!data || !Array.isArray(data) || data.length === 0) {
-                console.log('allEvents: no API data, keeping static content.');
-                return;
-            }
+            .then(function (data) {
+                if (!Array.isArray(data) || data.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;padding:30px;">No events</div>';
+                    return;
+                }
 
-            window._apiAllEvents = data;
+                window._apiEvents = data;
+                container.innerHTML = '';
 
-            // Clear static hardcoded cards
-            container.innerHTML = '';
+                const fragment = document.createDocumentFragment();
 
-            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                data.forEach(function (event, index) {
 
-            data.forEach(function (event, index) {
-                const date  = event.eventDate ? new Date(event.eventDate) : null;
-                const day   = date ? String(date.getDate()).padStart(2, '0') : '--';
-                const month = date ? monthNames[date.getMonth()] : '--';
-                const dateStr = date ? date.toLocaleDateString() : 'TBA';
+                    console.log("IMAGE:", event.imageUrl, event.image);
+                    
+                    const date = event.eventDate ? new Date(event.eventDate) : null;
+                    const day = date ? String(date.getDate()).padStart(2, '0') : '--';
+                    const month = date ? monthNames[date.getMonth()] : '--';
+                    const dateLabel = date ? date.toLocaleDateString() : 'TBA';
 
-                let imgSrc = event.imageUrl || event.image || '';
-                if (imgSrc && imgSrc.startsWith('/')) imgSrc = 'https://must.runasp.net' + imgSrc;
-                if (!imgSrc) imgSrc = 'img/event2.png';
+                    // 🔥 الحل هنا (منع الكاش)
+                    const sourceImage = event.imageUrl || event.image || '';
+                    const image = sourceImage
+                        ? getEventImage(sourceImage) + '?v=' + Date.now()
+                        : EVENT_PLACEHOLDER;
 
-                container.innerHTML += `
-                    <div class="event-card" onclick="openApiModal(${index})">
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    card.style.cursor = 'pointer';
+                    card.innerHTML = `
                         <div class="image-box">
-                            <img src="${escHtml(imgSrc)}" alt="${escHtml(event.title)}" onerror="this.src='img/event2.png'">
+                            <img src="${image}" alt="${escapeHtml(event.title || '')}" onerror="this.onerror=null;this.src='${EVENT_PLACEHOLDER}'">
                             <div class="date-box">
                                 <div class="day">${day}</div>
                                 <div class="month">${month}</div>
@@ -56,69 +79,65 @@
                         </div>
                         <div class="event-info">
                             <div class="meta">
-                                <span>📅 ${dateStr}</span>
-                                ${event.location ? `<span>📍 ${escHtml(event.location)}</span>` : ''}
+                                <span>${dateLabel}</span>
+                                ${event.location ? `<span>${escapeHtml(event.location)}</span>` : ''}
                             </div>
-                            <h3>${escHtml(event.title)}</h3>
-                            <p>${escHtml((event.description || '').slice(0, 120))}${event.description && event.description.length > 120 ? '…' : ''}</p>
+                            <h3>${escapeHtml(event.title || '')}</h3>
+                            <p>${escapeHtml((event.description || '').slice(0, 120))}</p>
                         </div>
-                    </div>`;
+                    `;
+
+                    card.addEventListener('click', function () {
+                        window.openApiEventModal(index);
+                    });
+
+                    fragment.appendChild(card);
+                });
+
+                container.appendChild(fragment);
+                console.log('All Events loaded:', data.length);
+            })
+            .catch(function (err) {
+                console.error('Events API error:', err);
+                container.innerHTML = '<div style="text-align:center;padding:30px;">Failed to load events</div>';
             });
-
-            console.log('allEvents loaded from API:', data.length, 'events');
-        })
-        .catch(function (err) {
-            console.error('allEvents API error:', err);
-            // Static content remains as fallback
-        });
     }
-    
-    initAllEvents();
 
-    // ── Modal opener (overrides the static one when API data available) ──
-    window.openApiModal = function (index) {
-        const events = window._apiAllEvents;
-        if (!events || !events[index]) return;
+    window.openApiEventModal = function (index) {
+        const event = window._apiEvents[index];
+        if (!event) return;
 
-        const event = events[index];
-        const date  = event.eventDate ? new Date(event.eventDate).toLocaleDateString() : 'TBA';
+        const date = event.eventDate ? new Date(event.eventDate).toLocaleDateString() : 'TBA';
+        const modal = document.getElementById('eventModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalTime = document.getElementById('modalTime');
+        const modalLocation = document.getElementById('modalLocation');
 
-        const el = function (id) { return document.getElementById(id); };
+        // 🔥 برضه هنا منع الكاش
+        const sourceImage = event.imageUrl || event.image || '';
+        if (modalImg) {
+            modalImg.src = sourceImage
+                ? getEventImage(sourceImage) + '?v=' + Date.now()
+                : EVENT_PLACEHOLDER;
+            modalImg.onerror = function () {
+                this.onerror = null;
+                this.src = EVENT_PLACEHOLDER;
+            };
+        }
 
-        const img = el('modalImg');
-        let imgUrl = event.imageUrl || event.image || '';
-        if (imgUrl && imgUrl.startsWith('/')) imgUrl = 'https://must.runasp.net' + imgUrl;
-        if (!imgUrl) imgUrl = 'img/event2.png';
-        if (img) img.src = imgUrl;
-
-        const title = el('modalTitle');
-        if (title) title.innerText = event.title || '';
-
-        const desc = el('modalDesc');
-        if (desc) desc.innerText = event.description || '';
-
-        const time = el('modalTime');
-        if (time) time.innerText = '📅 ' + date;
-
-        const loc = el('modalLocation');
-        if (loc) loc.innerText = event.location ? '📍 ' + event.location : '';
-
-        const modal = el('eventModal');
+        if (modalTitle) modalTitle.innerText = event.title || '';
+        if (modalDesc) modalDesc.innerText = event.description || '';
+        if (modalTime) modalTime.innerText = date;
+        if (modalLocation) modalLocation.innerText = event.location || '';
         if (modal) modal.style.display = 'flex';
     };
 
-    // ── Utility ──────────────────────────────────────────────────
-    function escHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
+    window.closeModal = function () {
+        const modal = document.getElementById('eventModal');
+        if (modal) modal.style.display = 'none';
+    };
 
-    // ════════════════════════════════════════
-    // AUTO-REFRESH LIVE DATA (5 seconds)
-    // ════════════════════════════════════════
-    setInterval(initAllEvents, 5000);
+    renderEvents();
 })();

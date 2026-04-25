@@ -36,22 +36,32 @@
     </div>
   </aside>
 
-  <!-- MAIN -->
-  <div class="main">
-  
+<!-- MAIN -->
+<div class="main">
+
     <!-- TOPBAR -->
     <div class="topbar-container">
+
         <div class="search-bar">
             <i class="fa-solid fa-search"></i>
             <input type="text" placeholder="Search data...">
         </div>
+
         <div class="topbar-right">
+
+            <a href="../index.html" class="home-icon" title="Go to Website">
+                <i class="fa-solid fa-house"></i>
+            </a>
+
             <div class="current-date" id="currentDate"></div>
+
             <div class="admin-profile">
                 <span id="adminNameDisplay">Admin</span>
                 <i class="fa-solid fa-circle-user"></i>
             </div>
+
         </div>
+
     </div>
 
     <div class="content-wrapper">
@@ -146,7 +156,7 @@
         <div id="sec-activities" class="section">
           <div class="topbar"><h2>Activities Management</h2><button class="btn btn-primary" onclick="openActivityModal()"><i class="fa-solid fa-plus"></i> Add Activity</button></div>
           <div class="card">
-            <table><thead><tr><th>#</th><th>Image</th><th>Title</th><th>Description</th><th>Duration</th><th>Players</th><th>Category</th><th>Actions</th></tr></thead>
+            <table><thead><tr><th>#</th><th>Image</th><th>Title</th><th>Description</th><th>Category</th><th>Actions</th></tr></thead>
             <tbody id="activitiesTable"></tbody></table>
           </div>
         </div>
@@ -154,7 +164,7 @@
         <div id="sec-activityregs" class="section">
           <div class="topbar"><h2>Activity Registrations</h2></div>
           <div class="card">
-            <table><thead><tr><th>User ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Activity</th><th>Registered At</th></tr></thead>
+            <table><thead><tr><th>User ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Phone Number</th><th>Activity</th><th>Category</th><th>Registered At</th></tr></thead>
             <tbody id="activityRegistrationsTable"></tbody></table>
           </div>
         </div>
@@ -163,7 +173,7 @@
         <div id="sec-categories" class="section">
           <div class="topbar"><h2>Activity Categories</h2><button class="btn btn-primary" onclick="openCategoryModal()"><i class="fa-solid fa-plus"></i> Add Category</button></div>
           <div class="card">
-            <table><thead><tr><th>#</th><th>Name</th><th>Icon</th><th>Actions</th></tr></thead>
+            <table><thead><tr><th>#</th><th>Image</th><th>Title</th><th>Description</th><th>Icon</th><th>Actions</th></tr></thead>
             <tbody id="categoriesTable"></tbody></table>
           </div>
         </div>
@@ -181,7 +191,7 @@
         <div id="sec-clubregs" class="section">
           <div class="topbar"><h2>Club Registrations</h2></div>
           <div class="card">
-            <table><thead><tr><th>User ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Club</th><th>Joined At</th></tr></thead>
+            <table><thead><tr><th>User ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Phone Number</th><th>Club</th><th>Joined At</th></tr></thead>
             <tbody id="clubRegistrationsTable"></tbody></table>
           </div>
         </div>
@@ -197,7 +207,7 @@
         <div id="sec-competitionregs" class="section">
           <div class="topbar"><h2>Competition Registrations</h2></div>
           <div class="card">
-            <table><thead><tr><th>User ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Competition</th><th>Registered At</th></tr></thead>
+            <table><thead><tr><th>User ID</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Phone Number</th><th>Competition</th><th>Registered At</th></tr></thead>
             <tbody id="competitionRegistrationsTable"></tbody></table>
           </div>
         </div>
@@ -294,8 +304,6 @@
         <input type="hidden" id="activityId">
         <label>Title</label><input type="text" id="activityTitleInput" required>
         <label>Description</label><textarea id="activityDescInput"></textarea>
-        <label>Duration (minutes)</label><input type="text" id="activityDurationInput">
-        <label>Players Count</label><input type="text" id="activityPlayersInput">
         <label>Category</label>
         <select id="activityCategoryInput"><option value="">-- Select Category --</option></select>
         <label>Image</label><input type="file" id="activityFileInput" accept="image/*">
@@ -312,7 +320,9 @@
     <form id="categoryForm">
       <div class="modal-body">
         <input type="hidden" id="categoryId">
-        <label>Name</label><input type="text" id="categoryNameInput" required>
+        <label>Title</label><input type="text" id="categoryNameInput" required>
+        <label>Description</label><textarea id="categoryDescInput"></textarea>
+        <label>Image</label><input type="file" id="categoryImageInput" accept="image/*">
         <label>Icon (FontAwesome class e.g. fa-campground)</label><input type="text" id="categoryIconInput">
       </div>
       <div class="modal-footer"><button type="button" class="btn btn-cancel" onclick="closeModal('categoryModalOverlay')">Cancel</button><button type="submit" class="btn btn-primary">Save Changes</button></div>

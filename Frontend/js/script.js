@@ -112,10 +112,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /* ─────────────────────────────────────────────────────────────────
    API INTEGRATION  (index.html only – guarded by element checks)
-   BASE URL: https://must.runasp.net
+   BASE URL: dynamic
    ───────────────────────────────────────────────────────────────── */
 
-const BASE_URL = 'https://must.runasp.net';
+const BASE_URL =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5184'
+        : 'https://must.runasp.net';
 
 // ── Token helpers ──────────────────────────────────────────────
 function getToken()        { return localStorage.getItem('must_token'); }
@@ -218,65 +222,8 @@ function escHtml(str) {
     });
 })();
 
-// ── EVENTS (index.html homepage section) ──────────────────────
-(function initIndexEvents() {
-    const container = document.getElementById('eventsContainer');
-    if (!container) return;
-
-    getEvents()
-        .then(function (data) {
-            if (!Array.isArray(data) || data.length === 0) {
-                console.log('Events: using static fallback.'); return;
-            }
-            window._apiEvents = data;
-            container.innerHTML = '';
-
-            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            data.slice(0, 3).forEach(function (ev, i) {
-                const d     = ev.eventDate ? new Date(ev.eventDate) : null;
-                const day   = d ? String(d.getDate()).padStart(2,'0') : '--';
-                const month = d ? monthNames[d.getMonth()] : '--';
-                const dateStr = d ? d.toLocaleDateString() : 'TBA';
-                // Events API has no image field – use a themed placeholder
-                const img   = ev.imageUrl ? (BASE_URL + ev.imageUrl) : (ev.image || 'img/event2.png');
-
-                container.innerHTML += `
-                <div class="event-card" onclick="openApiModal(${i})">
-                    <div class="image-box">
-                        <img src="${escHtml(img)}" alt="${escHtml(ev.title)}" onerror="this.src='img/event2.png'">
-                        <div class="date-box">
-                            <div class="day">${day}</div>
-                            <div class="month">${month}</div>
-                        </div>
-                    </div>
-                    <div class="event-info">
-                        <div class="meta">
-                            <span>📅 ${dateStr}</span>
-                            ${ev.location ? `<span>📍 ${escHtml(ev.location)}</span>` : ''}
-                        </div>
-                        <h3>${escHtml(ev.title)}</h3>
-                        <p>${escHtml((ev.description||'').slice(0,100))}${ev.description && ev.description.length>100?'…':''}</p>
-                    </div>
-                </div>`;
-            });
-            console.log('Events loaded from API:', data.length);
-        })
-        .catch(err => console.error('Events error:', err));
-})();
-
-window.openApiModal = function (index) {
-    const ev = window._apiEvents && window._apiEvents[index];
-    if (!ev) return;
-    const d = ev.eventDate ? new Date(ev.eventDate).toLocaleDateString() : 'TBA';
-    const get = id => document.getElementById(id);
-    const evImgSrc = ev.imageUrl ? (BASE_URL + ev.imageUrl) : (ev.image || 'img/event2.png');
-    if (get('modalImg'))      get('modalImg').src           = evImgSrc;
-    if (get('modalTitle'))    get('modalTitle').innerText   = ev.title || '';
-    if (get('modalDesc'))     get('modalDesc').innerText    = ev.description || '';
-    if (get('modalTime'))     get('modalTime').innerText    = '📅 ' + d;
-    if (get('modalLocation')) get('modalLocation').innerText = ev.location ? '📍 ' + ev.location : '';
-    if (get('eventModal'))    get('eventModal').style.display = 'flex';
-};
+// Homepage events are owned by index-api.js to avoid duplicate rendering
+// and conflicting modal handlers on the same #eventsContainer section.
 
 // ── NEWS (index.html homepage section) ────────────────────────
 (function initIndexNews() {
@@ -324,6 +271,9 @@ window.openApiNewsModal = function (index) {
     if (get('newsDesc'))   get('newsDesc').innerText    = item.content || item.description || item.body || '';
     if (get('newsModal'))  get('newsModal').style.display = 'flex';
 };
+function closeNewsModal() {
+    document.getElementById("newsModal").style.display = "none";
+}
 
 // ── SLIDER (index.html hero carousel) ─────────────────────────
 (function initIndexSlider() {
@@ -424,7 +374,7 @@ async function loadActivities() {
     if (!container) return; // Not on index.html, skip
 
     try {
-        const response = await fetch('https://must.runasp.net/api/Activities');
+        const response = await fetch(`${BASE_URL}/api/Activities`);
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json();
         console.log('[Activities] API response:', data);
@@ -440,7 +390,7 @@ async function loadActivities() {
             // Fix image URL — prepend base if relative
             let imgUrl = activity.imageUrl || activity.image || '';
             if (imgUrl && imgUrl.startsWith('/')) {
-                imgUrl = 'https://must.runasp.net' + imgUrl;
+                imgUrl = BASE_URL + imgUrl;
             }
             if (!imgUrl) imgUrl = 'img/OIP.webp';
 
@@ -467,7 +417,6 @@ async function loadActivities() {
 // Call immediately (DOM is already ready when this script loads)
 // and then poll every 5 seconds for real-time sync with Admin Dashboard
 loadActivities();
-setInterval(loadActivities, 5000);
 
 // ── ACTIVITIES (sports activities.html section) ────────────────
 (function initActivities() {
@@ -515,7 +464,6 @@ setInterval(loadActivities, 5000);
         }
     }
 
-    // Call on load and enable auto refresh every 5 seconds
+    // Call on load
     loadActivities();
-    setInterval(loadActivities, 5000);
 })();

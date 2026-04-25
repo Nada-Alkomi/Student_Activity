@@ -118,6 +118,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            white-space: nowrap;
         }
 
         .dropdown>a:hover,
@@ -881,48 +882,73 @@ body {
   margin-right: 5px;
 }
 
-/* Responsive */
-@media (max-width: 992px) {
-  .news-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
+
+
+
+.news-section {
+    padding: 40px 20px;
+    margin-top: 7rem;
+    margin-bottom: 70px;
+    background: #f4f6f9;
 }
 
-@media (max-width: 600px) {
-  .news-container {
-    grid-template-columns: 1fr;
-  }
-}
-    
-.card-title,
-.card-content h3 {
-    transition: color 0.3s ease, transform 0.3s ease;
+/* title */
+.news-section h2 {
+    text-align: center;
+    color: var(--primary);
+    font-size: 28px;
+    margin-bottom: 25px;
+    font-weight: 700;
 }
 
-.card-title:hover,
-.card-content h3:hover {
-    color: var(--secondary);
-    transform: translateY(-2px);
-}
-    section{
-        margin-bottom: 40px;
-    }
-
-    .news-section h2 {
-  position: relative;
-  display: inline-block;
-}
-
-.news-section h2::after {
-  content: "";
-  display: block;
-  width: 60%;
-  height: 3px;
-  background: var(--secondary);
-  margin: 8px auto 0;
-  border-radius: 2px;
+/* NEWS CARD ADAPTATION */
+.news-card {
+    position: relative;
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s ease;
 }
 
+.news-card:hover {
+    transform: translateY(-8px);
+}
+
+/* image */
+.news-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* content */
+.news-card-content {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* title */
+.news-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* meta */
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-gray);
+    border-top: 1px solid #E2E8F0;
+    padding-top: 10px;
+}
 </style>
    
 </head>
@@ -1086,105 +1112,32 @@ body {
 
     </div>
 
-<section class="news-section">
- 
-  <div class="news-container">
 
-    <!-- Card -->
-    <div class="card events">
-      <img src="img/news5.jpg">
-      
-      <div class="card-content">
-        <h3 class="card-title">
-          The First Scientific Day at The British Council Egypt for The Orientation of The Masters of Implantology in collaboration with Huddersfield University
-        </h3>
-        <div class="meta">
-          <span><i class="fa-regular fa-user"></i> By Code95 Admin</span>
-          <span><i class="fa-regular fa-calendar"></i> January 23, 2024</span>
+ <section class="news-section">
+
+   
+<div id="news" style="margin-bottom:70px;margin-top:7rem;">
+
+    <h2 class="mb-3">News</h2>
+
+    <div id="newsContainer" class="news-container"></div>
+
+    <!-- Modal -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeNewsModal()">&times;</span>
+
+            <img id="newsModalImg" onerror="this.src='img/news5.jpg'">
+
+            <h2 id="newsModalTitle"></h2>
+            <p id="newsModalDate"></p>
+            <p id="newsModalDesc"></p>
         </div>
-      </div>
     </div>
 
-    <!-- Repeat (9 cards total) -->
-    <div class="card collaboration">
-      <img src="img/news6.jpeg">
-      <div class="card-content">
-        <h3 class="card-title">
-          The Official Signing of a Collaboration Protocol between Ege Universities in Turkey and Misr University for Science and Technology
-        </h3>
-        <div class="meta">
-            
-          <span><i class="fa-regular fa-user"></i> By Code95 Admin</span>
-          <span><i class="fa-regular fa-calendar"></i> January 23, 2023</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card students">
-      <img src="img/news7.jpg">
-      
-      <div class="card-content">
-        <h3 class="card-title">
-          The Fourth Forum for Students and Graduates of the College
-        </h3>
-        
-        <div class="meta">
-          <span><i class="fa-regular fa-user"></i> By Habiba</span>
-          <span><i class="fa-regular fa-calendar"></i> March 23, 2025</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Duplicate to reach 9 -->
-    <!-- Copy same 3 again -->
-    <div class="card events">
-      <img src="img/ندوة.jpg"  >
-      <div class="card-content">
-        <div class="meta">
-            
-          <span><i class="fa-regular fa-user"></i> By Code95 Admin</span>
-          <span><i class="fa-regular fa-calendar"></i> January 23, 2024</span>
-        </div>
-
-        <h3>
-         Spreading awareness against FGM and supporting state efforts to protect and empower women.
-        </h3>
-      </div>
-    </div>
-
-    <!-- Repeat (9 cards total) -->
-    <div class="card collaboration">
-      <img src="img/new2.jpg">
-      
-      <div class="card-content">
-        <div class="meta">
-           
-          <span><i class="fa-regular fa-user"></i> By Code95 Admin</span>
-          <span><i class="fa-regular fa-calendar"></i> January 23, 2023</span>
-        </div>
-        <h3>
-        The First Women's Football Team at Misr University.
-        </h3>
-      </div>
-    </div>
-
-    <div class="card students">
-      <img src="img/news.jpg">
-    
-      <div class="card-content">
-        <div class="meta">
-          <span><i class="fa-regular fa-user"></i> By Habiba</span>
-          <span><i class="fa-regular fa-calendar"></i> March 23, 2025</span>
-        </div>
-        <h3>
-         Ramadan Football Tournament
-        </h3>
-      </div>
-    </div>
-
-
-  </div>
+</div>
 </section>
+
 
 <footer>
         <div class="footer-logo-center">
@@ -1236,88 +1189,8 @@ body {
         </div>
     </footer>
 
-    <script>
-    /* ── API Integration: GET /api/News ── */
-    const BASE_URL_NEWS   = 'https://must.runasp.net';
-    const newsContainer   = document.querySelector('.news-container');
-    let _apiAllNews       = [];
-
-    async function loadNews() {
-        try {
-            const res  = await fetch(BASE_URL_NEWS + '/api/News');
-            const text = await res.text();
-            let data   = null;
-            try { data = text ? JSON.parse(text) : null; } catch(_) { data = null; }
-
-            if (!res.ok || !Array.isArray(data) || data.length === 0) {
-                console.log('allNews: no API data, keeping static content.');
-                return;
-            }
-
-            _apiAllNews = data;
-            newsContainer.innerHTML = '';
-
-            data.forEach(function(item, index) {
-                const date = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '';
-                const img  = item.imageUrl ? (BASE_URL_NEWS + item.imageUrl) : 'img/news5.jpg';
-
-                newsContainer.innerHTML += `
-                <div class="card" onclick="showNewsDetail(${index})" style="cursor:pointer;">
-                    <img src="${escH(img)}" alt="${escH(item.title)}" onerror="this.src='img/news5.jpg'">
-                    <div class="card-content">
-                        <div class="meta">
-                            <span><i class="fa-regular fa-user"></i> MUST Admin</span>
-                            ${date ? `<span><i class="fa-regular fa-calendar"></i> ${date}</span>` : ''}
-                        </div>
-                        <h3>${escH(item.title)}</h3>
-                    </div>
-                </div>`;
-            });
-            console.log('allNews loaded:', data.length, 'items');
-
-        } catch(err) {
-            console.error('allNews API error:', err);
-        }
-    }
-
-    function showNewsDetail(index) {
-        const item = _apiAllNews[index];
-        if (!item || !item.id) return;
-        window.location.href = `news-details.html?id=${item.id}`;
-    }
-
-    function filterCards(category) {
-        const cards = document.querySelectorAll(".card");
-        cards.forEach(card => {
-            if (category === "all") {
-                card.style.display = "block";
-            } else {
-                card.style.display = card.classList.contains(category) ? "block" : "none";
-            }
-        });
-    }
-
-    function escH(str) {
-        if (!str) return '';
-        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    loadNews();
-    setInterval(loadNews, 5000); // Auto-refresh every 5 seconds
-
-    // User Authentication State Logic
-    window.addEventListener("DOMContentLoaded", () => {
-        const token = localStorage.getItem("must_token");
-        if (token) {
-            // Hide all login/signup buttons if logged in
-            document.querySelectorAll(".btn-login, .btn-signup, a[href*='login'], a[href*='signup']").forEach(btn => {
-                if(btn.textContent.toLowerCase().includes('login') || btn.textContent.toLowerCase().includes('signup')) {
-                    btn.style.display = "none";
-                }
-            });
-        }
-    });
-    </script>
+    <script src="js/api.js"></script>
+    <script src="js/allNews-api.js"></script>
  
 </body>
 </html>

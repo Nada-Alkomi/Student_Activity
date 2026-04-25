@@ -690,6 +690,11 @@
         <input type="number" id="universityId" placeholder="University ID" required>
       </div>
 
+      <div class="input-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="tel" id="phoneNumber" placeholder="Phone Number" inputmode="tel" required>
+      </div>
+
       <!-- Faculty / Specialization -->
       <label for="faculty">Choose Faculty:</label>
       <select id="faculty" name="faculty" required>
@@ -864,15 +869,28 @@
         return;
       }
 
+      const participantData = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        phoneNumber: document.getElementById('phoneNumber').value.trim(),
+        faculty: document.getElementById('faculty').value,
+        universityId: Number(document.getElementById('universityId').value)
+      };
+
+      if (!participantData.firstName || !participantData.lastName || !participantData.phoneNumber || !participantData.faculty || !participantData.universityId) {
+        alert('Please complete all form fields before registration.');
+        return;
+      }
+
       try {
         if (registrationType === 'competition') {
-          await window.registerCompetition(itemId);
+          await window.registerCompetition(itemId, participantData);
         } else if (registrationType === 'club') {
-          await window.joinClub(itemId);
+          await window.joinClub(itemId, participantData);
         } else if (registrationType === 'activity') {
-          await window.registerActivity(itemId);
+          await window.registerActivity(itemId, participantData);
         } else if (registrationType === 'event') {
-          await window.registerEvent(itemId);
+          await window.registerEvent(itemId, participantData);
         } else {
           throw new Error('Unsupported registration type.');
         }
